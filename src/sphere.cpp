@@ -4,7 +4,7 @@
 #include <cmath>
 
 
-Sphere::Sphere(const Point3 & center, const float & radius, std::shared_ptr<Material> material) :
+Sphere::Sphere(const Point3 & center, const double & radius, std::shared_ptr<Material> material) :
     center_(center),
     radius_(radius),
     material_(material)
@@ -15,25 +15,25 @@ Point3 Sphere::center() const
     return center_;
 }
 
-float Sphere::radius() const
+double Sphere::radius() const
 {
     return radius_;
 }
     
-std::optional<Hit> Sphere::trace(const Ray & r, float t_min, float t_max) const
+std::optional<Hit> Sphere::trace(const Ray & r, double t_min, double t_max) const
 {
     Vec3 oc = r.origin() - center_;
 
-    float a = r.direction().norm_squared();
-    float b = dot(oc, r.direction());
-    float c = oc.norm_squared() - radius_ * radius_;
-    float d = b * b - a * c;
+    double a = r.direction().norm_squared();
+    double b = dot(oc, r.direction());
+    double c = oc.norm_squared() - radius_ * radius_;
+    double d = b * b - a * c;
 
     if (d < 0)
         return std::nullopt;
 
-    float d_sqrt = std::sqrt(d);
-    float t = (-b - d_sqrt) / a;
+    double d_sqrt = std::sqrt(d);
+    double t = (-b - d_sqrt) / a;
 
     if (t < t_min || t_max < t) {
         t = (-b + d_sqrt) / a;

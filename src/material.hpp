@@ -34,7 +34,7 @@ private:
     ColorRGB albedo_;
 
     mutable std::minstd_rand gen_;
-    mutable std::normal_distribution<float> gaussian_;
+    mutable std::normal_distribution<double> gaussian_;
 
     Vec3 random_unit() const {
         return unit(Vec3(gaussian_(gen_), gaussian_(gen_), gaussian_(gen_)));
@@ -45,17 +45,17 @@ private:
 class Metal : public Material {
 public:
     
-    Metal(const ColorRGB & albedo, const float & fuzz, const unsigned int & seed = 0);
+    Metal(const ColorRGB & albedo, const double & fuzz, const unsigned int & seed = 0);
 
     virtual std::optional<std::tuple<ColorRGB, Ray>> scatter(const Ray & r, const Hit & hit) const override;
 
 private:
 
     ColorRGB albedo_;
-    float fuzz_;
+    double fuzz_;
 
     mutable std::minstd_rand gen_;
-    mutable std::normal_distribution<float> gaussian_;
+    mutable std::normal_distribution<double> gaussian_;
 
     Vec3 random_unit() const {
         return unit(Vec3(gaussian_(gen_), gaussian_(gen_), gaussian_(gen_)));
@@ -66,20 +66,20 @@ private:
 class Dielectric : public Material {
 public:
 
-    Dielectric(const float & ir, const unsigned int & seed = 0);
+    Dielectric(const double & ir, const unsigned int & seed = 0);
 
     virtual std::optional<std::tuple<ColorRGB, Ray>> scatter(const Ray & r, const Hit & hit) const override;
 
 private:
 
-    Vec3 refract(const Vec3 & uv, const Vec3 & n, const float & refraction_ratio) const;
+    Vec3 refract(const Vec3 & uv, const Vec3 & n, const double & refraction_ratio) const;
 
-    static float reflectance(const float & cosine, const float & ref_idx);
+    static double reflectance(const double & cosine, const double & ref_idx);
 
-    float ir_;
+    double ir_;
 
     mutable std::minstd_rand gen_;
-    mutable std::uniform_real_distribution<float> uniform_;
+    mutable std::uniform_real_distribution<double> uniform_;
 };
 
 

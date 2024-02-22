@@ -1,0 +1,9 @@
+build
+render
+
+*.png
+*.jpg
+*.jpeg
+
+.*
+!.gitignore

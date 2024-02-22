@@ -18,18 +18,18 @@ class Material;
 struct Hit {
     Point3 point;
     Vec3 normal;
-    float solution;
+    double solution;
     bool front_face;
     std::shared_ptr<Material> material;
 };
 
 // hit point, normal, solution for a ray, front face
-// using Hit = std::tuple<Point3, Vec3, float, bool>;
+// using Hit = std::tuple<Point3, Vec3, double, bool>;
 
 class Hittable {
 public:
 
-    virtual std::optional<Hit> trace(const Ray & r, float t_min, float t_max) const = 0;
+    virtual std::optional<Hit> trace(const Ray & r, double t_min, double t_max) const = 0;
 
     virtual ~Hittable() = default;
 };
@@ -45,7 +45,7 @@ public:
     
     void add(std::shared_ptr<Hittable> object);
 
-    virtual std::optional<Hit> trace(const Ray & r, float t_min, float t_max) const override;
+    virtual std::optional<Hit> trace(const Ray & r, double t_min, double t_max) const override;
 
 private:
     std::vector<std::shared_ptr<Hittable>> objects;

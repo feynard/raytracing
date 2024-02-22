@@ -13,7 +13,7 @@ public:
     Point3 origin() const { return origin_; }
     Vec3 direction() const { return direction_; }
 
-    Point3 operator() (float t) const {
+    Point3 operator() (double t) const {
         return origin_ + t * direction_;
     }
 

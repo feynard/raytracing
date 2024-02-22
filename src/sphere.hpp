@@ -11,11 +11,11 @@
 
 class Sphere : public Hittable {
 public:
-    Sphere(const Point3 & center, const float & radius, std::shared_ptr<Material> material);
+    Sphere(const Point3 & center, const double & radius, std::shared_ptr<Material> material);
     Point3 center() const;
-    float radius() const;
+    double radius() const;
     
-    virtual std::optional<Hit> trace(const Ray & r, float t_min, float t_max) const override;
+    virtual std::optional<Hit> trace(const Ray & r, double t_min, double t_max) const override;
 
 private:
 

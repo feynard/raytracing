@@ -18,7 +18,7 @@ void HittableList::add(std::shared_ptr<Hittable> object)
     objects.push_back(object);
 }
 
-std::optional<Hit> HittableList::trace(const Ray & r, float t_min, float t_max) const
+std::optional<Hit> HittableList::trace(const Ray & r, double t_min, double t_max) const
 {
     std::optional<Hit> hit = std::nullopt;
 

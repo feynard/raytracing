@@ -42,16 +42,14 @@ public:
         lens_radius_ = aperture / 2;
     }
 
-        Ray get_ray(double s, double t) const
-        {
-            // return Ray(origin_, lower_left_corner_ + s * horizontal_ + t * vertical_ - origin_);
+    Ray get_ray(double s, double t) const
+    {
+        Vec2 rd = lens_radius_ * random_in_unit_disk();
+        Vec3 offset = u_ * rd.x + v_ * rd.y;
 
-            Vec2 rd = lens_radius_ * random_in_unit_disk();
-            Vec3 offset = u_ * rd.x + v_ * rd.y;
+        return Ray(origin_ + offset, lower_left_corner_ + s * horizontal_ + t * vertical_ - origin_ - offset);
 
-            return Ray(origin_ + offset, lower_left_corner_ + s * horizontal_ + t * vertical_ - origin_ - offset);
-
-        }
+    }
 
 
 private:

@@ -3,6 +3,7 @@
 
 
 #include <cstdint>
+#include <iomanip>
 #include <cmath>
 #include <algorithm>
 #include <ostream>
@@ -13,27 +14,7 @@ template<typename T, int D>
 struct VecBase
 {
     T e[D];
-
-    friend std::ostream & operator<< <T, D> (std::ostream & os, const VecBase<T, D> & v);
 };
-
-template<typename T, int D>
-std::ostream & operator<< (std::ostream & os, const VecBase<T, D> & v)
-{
-    os << '[';
-
-    for (int i = 0; i < D; ++i) {
-        os << std::format("{:.4}", reinterpret_cast<T *>(const_cast<VecBase<T, D> *>(&v))[i]);
-
-        if (i != D - 1)
-            os << ", ";
-    }
-    
-    os << ']';
-
-    return os;
-}
-
 
 
 template<typename T>
@@ -111,6 +92,7 @@ struct Vec : public VecBase<T, D>
 
     T norm() const;
     T norm_squared() const;
+    Vec<T, D> sqrt() const;
 
     Vec<T, D> unit() const;
 
@@ -119,24 +101,6 @@ struct Vec : public VecBase<T, D>
     Vec<T, D> reflect(const Vec<T, D> & n) const;
 };
 
-/*
-template<typename T, int D>
-struct Point : public VecBase<T, D>
-{
-    Point() = default;
-    Point(const T & e_1, const T & e_2) : VecBase<T, D>(e_1, e_2) {}
-    Point(const T & e_1, const T & e_2, const T & e_3) : VecBase<T, D>(e_1, e_2, e_3) {}
-    Point(const T & e_1, const T & e_2, const T & e_3, const T & e_4) : VecBase<T, D>(e_1, e_2, e_3, e_4) {}
-
-    void operator+= (const Vec<T, D> & v);
-    void operator-= (const Vec<T, D> & v);
-
-    Point<T, D> operator+ (const Vec<T, D> & v) const;
-    Point<T, D> operator- (const Vec<T, D> & v) const;
-
-    Vec<T, D> operator- (const Point<T, D> & p) const;
-};
-*/
 
 template<typename T, int D>
 struct Color : public Vec<T, D>
@@ -150,8 +114,6 @@ struct Color : public Vec<T, D>
 
     explicit operator Color<uint8_t, D> ();
     explicit operator Color<float, D> ();
-
-    Color<T, D> sqrt() const;
 };
 
 
@@ -190,18 +152,15 @@ Color<T, D>::operator Color<float, D> ()
 
 // Useful links
 
-// template<typename T, int D>
-// using Color = Vec<T, D>;
-
 using ColorRGB = Color<float, 3>;
 using ColorRGBA = Color<float, 4>;
 
-using Vec2 = Vec<float, 2>;
-using Vec3 = Vec<float, 3>;
-using Vec4 = Vec<float, 4>;
+using Vec2 = Vec<double, 2>;
+using Vec3 = Vec<double, 3>;
+using Vec4 = Vec<double, 4>;
 
-using Point2 = Vec<float, 2>;
-using Point3 = Vec<float, 3>;
+using Point2 = Vec<double, 2>;
+using Point3 = Vec<double, 3>;
 
 
 // Defintion
@@ -334,12 +293,12 @@ inline Vec<T, D> Vec<T, D>::unit() const
 }
 
 template <typename T, int D>
-inline Color<T, D> Color<T, D>::sqrt() const
+inline Vec<T, D> Vec<T, D>::sqrt() const
 {
-    Color<T, D> v;
+    Vec<T, D> v;
 
     for (int i = 0; i < D; ++i)
-        reinterpret_cast<T *>(&v)[i] = std::sqrt(reinterpret_cast<T *>(const_cast<Color<T, D> *>(this))[i]);
+        reinterpret_cast<T *>(&v)[i] = std::sqrt(reinterpret_cast<T *>(const_cast<Vec<T, D> *>(this))[i]);
 
     return v;
 }
@@ -363,9 +322,6 @@ inline T norm(const Vec<T, D> & v) { return v.norm(); }
 
 template <typename T, int D>
 inline Vec<T, D> unit(const Vec<T, D> & v) { return v.unit(); }
-
-template <typename T, int D>
-inline Color<T, D> sqrt(const Color<T, D> & v) { return v.sqrt(); }
 
 template <typename T, int D>
 inline T dot(const Vec<T, D> & u, const Vec<T, D> & v)
@@ -393,5 +349,7 @@ inline Vec<T, D> Vec<T, D>::reflect(const Vec<T, D> & n) const
     return (*this) - 2 * dot((*this), n) * n;
 }
 
+template <typename T, int D>
+inline Vec<T, D> sqrt(const Vec<T, D> & v) { return v.sqrt(); }
 
 #endif // VEC_HPP

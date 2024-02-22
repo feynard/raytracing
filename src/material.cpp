@@ -18,7 +18,7 @@ std::optional<std::tuple<ColorRGB, Ray>> Lambertian::scatter(const Ray & r, cons
 }
 
 
-Metal::Metal(const ColorRGB & albedo, const float & fuzz, const unsigned int & seed) :
+Metal::Metal(const ColorRGB & albedo, const double & fuzz, const unsigned int & seed) :
     albedo_(albedo),
     fuzz_(fuzz < 1 ? fuzz : 1),
     gen_(seed),
@@ -38,7 +38,7 @@ std::optional<std::tuple<ColorRGB, Ray>> Metal::scatter(const Ray & r, const Hit
 }
 
 
-Dielectric::Dielectric(const float & ir, const unsigned int & seed) :
+Dielectric::Dielectric(const double & ir, const unsigned int & seed) :
     ir_(ir),
     gen_(seed),
     uniform_(0.0, 1.0)
@@ -47,11 +47,11 @@ Dielectric::Dielectric(const float & ir, const unsigned int & seed) :
 std::optional<std::tuple<ColorRGB, Ray>> Dielectric::scatter(const Ray & r, const Hit & hit) const
 {
     ColorRGB attenuation(1.0, 1.0, 1.0);
-    float refraction_ratio = hit.front_face ? (1.0 / ir_) : ir_;
+    double refraction_ratio = hit.front_face ? (1.0 / ir_) : ir_;
 
     Vec3 unit_direction = unit(r.direction());
-    float cos_theta = std::min(dot(-unit_direction, hit.normal), 1.0f);
-    float sin_theta = std::sqrt(1.0 - cos_theta * cos_theta);
+    double cos_theta = std::min(dot(-unit_direction, hit.normal), 1.0);
+    double sin_theta = std::sqrt(1.0 - cos_theta * cos_theta);
 
     bool cannot_refract = refraction_ratio * sin_theta > 1.0;
     Vec3 direction;
@@ -65,9 +65,9 @@ std::optional<std::tuple<ColorRGB, Ray>> Dielectric::scatter(const Ray & r, cons
     return std::tuple { attenuation, scattered };
 }
 
-Vec3 Dielectric::refract(const Vec3 & unit_direction, const Vec3 & n, const float & refraction_ratio) const
+Vec3 Dielectric::refract(const Vec3 & unit_direction, const Vec3 & n, const double & refraction_ratio) const
 {
-    auto cos_theta = std::min(dot(-unit_direction, n), 1.0f);
+    auto cos_theta = std::min(dot(-unit_direction, n), 1.0);
     
     Vec3 r_out_perp = refraction_ratio * (unit_direction + cos_theta*n);
     Vec3 r_out_parallel = -std::sqrt(fabs(1.0 - r_out_perp.norm_squared())) * n;
@@ -75,7 +75,7 @@ Vec3 Dielectric::refract(const Vec3 & unit_direction, const Vec3 & n, const floa
     return r_out_perp + r_out_parallel;
 }
 
-float Dielectric::reflectance(const float & cosine, const float & ref_idx)
+double Dielectric::reflectance(const double & cosine, const double & ref_idx)
 {
     // Use Schlick's approximation for reflectance.
     auto r0 = (1 - ref_idx) / (1 + ref_idx);
